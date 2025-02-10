@@ -1,0 +1,81 @@
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+public class StockPredictionApp extends JFrame {
+ private JTextField openTextField, closeTextField;
+ private JLabel predictionLabel;
+ public StockPredictionApp() {
+ setTitle("Stock Prediction App");
+ setSize(800, 600);
+ setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+ JPanel panel = new JPanel();
+ getContentPane().add(panel);
+ // Data
+ double[] openData = { /* Add your open data here */ };
+ double[] closeData = { /* Add your close data here */ };
+ double[] turnoverData = { /* Add your turnover data here */ };
+ // Scatter plots
+ JFreeChart openChart = createScatterChart("Open Vs. Turnover", "Open", 
+"Turnover", openData, turnoverData);
+ JFreeChart closeChart = createScatterChart("Close Vs. Turnover", "Close", 
+"Turnover", closeData, turnoverData);
+ // TextFields and Labels
+ openTextField = new JTextField(10);
+ closeTextField = new JTextField(10);
+ JLabel openLabel = new JLabel("Type Open Rate:");
+ JLabel closeLabel = new JLabel("Type Close Rate:");
+ predictionLabel = new JLabel("Predicted Stock Turnover: ");
+ // Button
+ JButton predictButton = new JButton("Predict Stock Turnover Price");
+ predictButton.addActionListener(new ActionListener() {
+ @Override
+ public void actionPerformed(ActionEvent e) {
+ predict();
+ }
+ });
+// Layout
+ panel.add(openLabel);
+ panel.add(openTextField);
+ panel.add(closeLabel);
+ panel.add(closeTextField);
+ panel.add(predictButton);
+ panel.add(predictionLabel);
+ panel.add(new ChartPanel(openChart));
+ panel.add(new ChartPanel(closeChart));
+ panel.setLayout(null);
+ setLocationRelativeTo(null);
+ setVisible(true);
+ }
+ private JFreeChart createScatterChart(String title, String xAxisLabel, String 
+yAxisLabel, double[] xData, double[] yData) {
+ XYSeries series = new XYSeries("Turnover");
+ for (int i = 0; i < xData.length; i++) {
+ series.add(xData[i], yData[i]);
+ }
+ XYSeriesCollection dataset = new XYSeriesCollection(series);
+ JFreeChart chart = ChartFactory.createScatterPlot(title, xAxisLabel, yAxisLabel, 
+dataset);
+ return chart;
+ }
+ private void predict() {
+ double open = Double.parseDouble(openTextField.getText());
+ double close = Double.parseDouble(closeTextField.getText());
+ // Perform prediction logic here
+ // For simplicity, let's assume predictionResult is the predicted value
+ double predictionResult = open + close;
+ predictionLabel.setText("Predicted Stock Turnover: " + predictionResult);
+ }
+ public static void main(String[] args) {
+ new StockPredictionApp();
+ }
+}
